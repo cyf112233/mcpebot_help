@@ -1,6 +1,31 @@
-import { FaServer, FaUser, FaComments, FaImage, FaGlobe, FaChartLine, FaBook } from 'react-icons/fa';
+'use client';
+
+import { FaServer, FaUser, FaComments, FaImage, FaGlobe, FaChartLine, FaBook, FaHeartbeat, FaBars, FaTimes } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // 处理锚点跳转
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const href = e.currentTarget.getAttribute('href');
+    if (href) {
+      const element = document.querySelector(href);
+      if (element) {
+        const offset = 60; // 调整偏移量为60像素
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        setIsMenuOpen(false);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white">
       {/* 顶部导航栏 */}
@@ -8,6 +33,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-14 sm:h-16">
             <div className="flex items-center">
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="mr-4 text-gray-300 hover:text-white focus:outline-none"
+                aria-label="打开目录"
+              >
+                {isMenuOpen ? <FaTimes className="h-6 w-6" /> : <FaBars className="h-6 w-6" />}
+              </button>
               <FaServer className="h-6 w-6 sm:h-8 sm:w-8 text-green-500" />
               <span className="ml-2 text-lg sm:text-xl font-bold">MCPEBot 服务器说明文档</span>
             </div>
@@ -15,10 +47,34 @@ export default function Home() {
         </div>
       </nav>
 
+      {/* 侧边目录 */}
+      <div className={`fixed inset-y-0 left-0 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out z-40 w-64 bg-gray-800 shadow-lg`}>
+        <div className="h-full overflow-y-auto py-4">
+          <div className="px-4 space-y-2">
+            <h3 className="text-lg font-semibold text-green-500 mb-4">目录</h3>
+            <a href="#server-info" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-lg" onClick={handleAnchorClick}>
+              服务器信息
+            </a>
+            <a href="#account-system" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-lg" onClick={handleAnchorClick}>
+              账号系统
+            </a>
+            <a href="#chat-rules" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-lg" onClick={handleAnchorClick}>
+              群聊规则
+            </a>
+            <a href="#image-plugin" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-lg" onClick={handleAnchorClick}>
+              贴图插件使用说明
+            </a>
+            <a href="#enchant-plugin" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-lg" onClick={handleAnchorClick}>
+              附魔分解插件使用教程
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* 主要内容区域 */}
       <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* 服务器信息卡片 */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
+        <div id="server-info" className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
           <h2 className="text-xl sm:text-2xl font-bold text-green-500 mb-3 sm:mb-4">服务器信息</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div className="bg-gray-700 p-3 sm:p-4 rounded-lg">
@@ -57,7 +113,7 @@ export default function Home() {
                   <a href="https://www.mcpebot.com/" target="_self" className="text-blue-400 hover:text-blue-300 break-all">官方网站</a>
                 </li>
                 <li className="flex items-center">
-                  <FaChartLine className="text-green-500 mr-2 flex-shrink-0" />
+                  <FaHeartbeat className="text-green-500 mr-2 flex-shrink-0" />
                   <a href="https://status.mcpebot.com/" target="_self" className="text-blue-400 hover:text-blue-300 break-all">服务器监控</a>
                 </li>
               </ul>
@@ -66,7 +122,7 @@ export default function Home() {
         </div>
 
         {/* 账号系统 */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
+        <div id="account-system" className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
           <h2 className="text-xl sm:text-2xl font-bold text-green-500 mb-3 sm:mb-4">账号系统</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div className="bg-gray-700 p-3 sm:p-4 rounded-lg">
@@ -88,7 +144,7 @@ export default function Home() {
         </div>
 
         {/* 群聊规则 */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
+        <div id="chat-rules" className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
           <h2 className="text-xl sm:text-2xl font-bold text-green-500 mb-3 sm:mb-4">群聊规则</h2>
           <div className="bg-gray-700 p-3 sm:p-4 rounded-lg">
             <ul className="space-y-2 text-sm sm:text-base">
@@ -99,47 +155,65 @@ export default function Home() {
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-green-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
                 <span>基岩版玩家请在备注后添加"基岩版"</span>
-          </li>
+              </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-green-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
                 <span>示例：Xiaobumoxie-正版</span>
-          </li>
+              </li>
             </ul>
           </div>
         </div>
 
         {/* 贴图插件使用说明 */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
+        <div id="image-plugin" className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
           <h2 className="text-xl sm:text-2xl font-bold text-green-500 mb-3 sm:mb-4">贴图插件使用说明</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <div className="bg-gray-700 p-3 sm:p-4 rounded-lg">
-              <h3 className="text-base sm:text-lg font-semibold text-green-400 mb-2">创建贴图</h3>
-              <CodeBlock
-                title="创建命令"
-                code="/if create (贴图ID) (图床链接) (方块宽度) (方块高度)"
-              />
-              <p className="text-gray-300 mt-2 text-sm sm:text-base">注意：请确保背包中有足够的地图</p>
+          <div className="bg-gray-700 p-3 sm:p-4 rounded-lg">
+            <p className="text-gray-300 mb-4">贴图插件可以通过创建或获取两种方式生成贴图，两种方式都需要消耗地图：</p>
+            <p className="text-gray-300 mb-4 text-sm">注意：每个玩家创建的贴图ID都是独立的，不会与其他玩家的贴图ID冲突。</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold text-green-400 mb-2">创建贴图</h3>
+                <CodeBlock
+                  title="创建命令"
+                  code="/if create (贴图ID) (图床链接) (方块宽度) (方块高度) [combined]"
+                />
+                <p className="text-gray-300 mt-2 text-sm sm:text-base">适用于首次创建新的贴图</p>
+                <p className="text-gray-300 mt-2 text-sm sm:text-base">添加 combined 参数可获得小纸条形式的地图</p>
+              </div>
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold text-green-400 mb-2">获取贴图</h3>
+                <CodeBlock
+                  title="获取命令"
+                  code="/if get (贴图ID) [combined]"
+                />
+                <p className="text-gray-300 mt-2 text-sm sm:text-base">适用于获取已创建的贴图</p>
+                <p className="text-gray-300 mt-2 text-sm sm:text-base">添加 combined 参数可获得小纸条形式的地图</p>
+              </div>
             </div>
-            <div className="bg-gray-700 p-3 sm:p-4 rounded-lg">
-              <h3 className="text-base sm:text-lg font-semibold text-green-400 mb-2">获取贴图</h3>
-              <CodeBlock
-                title="获取命令"
-                code="/if get (贴图ID)"
-              />
-              <div className="mt-4">
-                <h4 className="text-green-400 mb-2 text-sm sm:text-base">贴图展示步骤：</h4>
-                <ol className="list-decimal list-inside space-y-1 text-gray-300 text-sm sm:text-base">
-                  <li>系统会生成一张小纸条</li>
-                  <li>使用展示框摆出所需的长宽</li>
-                  <li>右键将小纸条放入展示框</li>
-        </ol>
+            <div className="mt-4">
+              <h4 className="text-green-400 mb-2 text-sm sm:text-base">贴图展示步骤：</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h5 className="text-green-400 mb-2 text-sm">小纸条形式：</h5>
+                  <ol className="list-decimal list-inside space-y-1 text-gray-300 text-sm sm:text-base">
+                    <li>使用展示框摆出所需的长宽</li>
+                    <li>右键将小纸条放入展示框</li>
+                  </ol>
+                </div>
+                <div>
+                  <h5 className="text-green-400 mb-2 text-sm">散装地图形式：</h5>
+                  <ol className="list-decimal list-inside space-y-1 text-gray-300 text-sm sm:text-base">
+                    <li>使用展示框摆出所需的长宽</li>
+                    <li>将地图一张一张放入展示框</li>
+                  </ol>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* 附魔分解插件使用教程 */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
+        <div id="enchant-plugin" className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 border border-gray-700">
           <h2 className="text-xl sm:text-2xl font-bold text-green-500 mb-3 sm:mb-4 flex items-center">
             <FaBook className="mr-2" />
             附魔分解插件使用教程
